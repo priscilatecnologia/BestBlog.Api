@@ -9,6 +9,8 @@ namespace Repository
     {
         private readonly BlogContext _context;
 
+        public BlogContext Context => _context;
+
         protected BaseRepository(BlogContext context)
         {
             _context = context;
