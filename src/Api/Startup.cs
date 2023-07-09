@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Repository;
+using System;
 
 namespace Api
 {
@@ -28,6 +29,8 @@ namespace Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BestBlog", Version = "v1" });
             });
+
+            services.AddDependencyInjectionConfiguration();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,4 +49,15 @@ namespace Api
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
+
+    public static class DependencyInjectionConfig
+    {
+        public static void AddDependencyInjectionConfiguration(this IServiceCollection services)
+        {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+
+            NativeInjectorBootStrapper.RegisterServices(services);
+        }
+    }
+
 }

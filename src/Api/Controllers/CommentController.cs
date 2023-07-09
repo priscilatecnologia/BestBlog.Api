@@ -18,8 +18,9 @@ namespace Api.Controllers
         private readonly ILogger<CommentController> _logger;
         private readonly ICommentRepository _repository;
 
-        public CommentController(ILogger<CommentController> logger)
+        public CommentController(ILogger<CommentController> logger, ICommentRepository repository)
         {
+            _repository = repository;
             _logger = logger;
         }
 
@@ -35,9 +36,10 @@ namespace Api.Controllers
                 var result = _repository.GetAll();
                 return result.Any() ? Ok(result) : NotFound();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 // TODO: Request for the best answare
+                _logger.LogError(e, e.Message);
                 return ValidationProblem();
             }
         }
@@ -63,7 +65,17 @@ namespace Api.Controllers
         [HttpPost]
         public ActionResult<Comment> Post([FromBody] Comment comment)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = _repository.Create(comment);
+                return result is not null ? Ok(result) : throw new Exception();
+            }
+            catch (Exception e)
+            {
+                // TODO: Request for the best answare
+                _logger.LogError(e, e.Message);
+                return ValidationProblem();
+            }
         }
 
         [HttpPut("{id:guid}")]
