@@ -5,9 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Repository;
-using System.Data;
-using System.Data.SqlClient;
-using Microsoft.OpenApi.Models;
 
 namespace Api
 {
