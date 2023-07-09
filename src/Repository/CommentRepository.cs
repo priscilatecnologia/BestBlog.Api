@@ -46,5 +46,17 @@ namespace Repository
         {
             return _context.Comments.Where(x => x.PostId == postId);
         }
+
+        public Comment UpdateByPostId(Guid postId, Comment comment)
+        {
+            var entity = _context. Comments.Where(x => x.PostId == postId && x.Id == comment.Id).FirstOrDefault();
+            return _context.Comments.Update(entity).Entity;
+        }
+
+        public Comment DeleteByPostId(Guid postId, Comment comment)
+        {
+            var entity = _context.Comments.Where(x => x.PostId == postId && x.Id == comment.Id).FirstOrDefault();
+            return _context.Comments.Remove(entity).Entity;
+        }
     }
 }

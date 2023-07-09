@@ -4,13 +4,10 @@ using System.Collections.Generic;
 
 namespace Repository
 {
-    public interface ICommentRepository
+    public interface ICommentRepository : IBaseRepository<Comment>
     {
-        IEnumerable<Comment> GetAll();
-        Comment Get(Guid id);
-        Comment Create(Comment comment);
-        Comment Update(Comment comment);
-        bool Delete(Guid id);
         IEnumerable<Comment> GetByPostId(Guid postId);
+        Comment UpdateByPostId(Guid postId, Comment comment);
+        Comment DeleteByPostId(Guid postId, Comment comment);
     }
 }
