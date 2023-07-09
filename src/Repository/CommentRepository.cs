@@ -1,39 +1,50 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Model;
 
 namespace Repository
 {
-    public class CommentRepository
+    public class CommentRepository : ICommentRepository
     {
+        private readonly BlogContext _context;
+
+        public CommentRepository(BlogContext context)
+        {
+            _context = context;
+        }
+
         public IEnumerable<Comment> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Comments;
         }
 
         public Comment Get(Guid id)
         {
-            throw new NotImplementedException();
+            return _context.Comments.Find(id);
         }
 
         public Comment Create(Comment comment)
         {
-            throw new NotImplementedException();
+            return _context.Comments.Add(comment).Entity;
         }
 
         public Comment Update(Comment comment)
         {
-            throw new NotImplementedException();
+            return _context.Comments.Update(comment).Entity;
         }
 
         public bool Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var entity = _context.Comments.Find(id);
+            var result = _context.Comments.Remove(entity);
+            return result.State == EntityState.Deleted;
         }
 
         public IEnumerable<Comment> GetByPostId(Guid postId)
         {
-            throw new NotImplementedException();
+            return _context.Comments.Where(x => x.PostId == postId);
         }
     }
 }
