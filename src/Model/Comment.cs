@@ -12,12 +12,12 @@ namespace Model
         public DateTime CreationDate { get; set; }
     }
 
-    public class CoomentValidation : AbstractValidator<Comment>
+    public class CommentValidation : AbstractValidator<Comment>
     {
-        public CoomentValidation()
+        public CommentValidation()
         {
             RuleFor(x => x.Content).Must(x => !string.IsNullOrEmpty(x) && x.Length <= 120);
-            RuleFor(x => x.Author).Must(x => !string.IsNullOrEmpty(x) && x.Length <= 120);
+            RuleFor(x => x.Author).Must(x => !string.IsNullOrEmpty(x) && x.Length <= 30);
             RuleFor(x => x.PostId).NotNull().NotEmpty();
         }
     }

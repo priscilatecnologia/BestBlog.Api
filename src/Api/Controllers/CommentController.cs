@@ -17,11 +17,13 @@ namespace Api.Controllers
     {
         private readonly ILogger<CommentController> _logger;
         private readonly ICommentRepository _repository;
+        private readonly IPostRepository _postRepository;
 
-        public CommentController(ILogger<CommentController> logger, ICommentRepository repository)
+        public CommentController(ILogger<CommentController> logger, ICommentRepository repository, IPostRepository postRepository)
         {
             _repository = repository;
             _logger = logger;
+            _postRepository = postRepository;
         }
 
         [HttpGet]
@@ -65,8 +67,18 @@ namespace Api.Controllers
         [HttpPost]
         public ActionResult<Comment> Post([FromBody] Comment comment)
         {
+            if (!ModelState.IsValid)
+            {
+                // O modelo é inválido, retorne uma resposta adequada
+                return BadRequest(ModelState);
+            }
+
             try
             {
+                var post = _postRepository.Get(comment.PostId);
+                if (post is null)
+                    return BadRequest(new { Message = "The post reference notfound", Model = comment});
+
                 var result = _repository.Create(comment);
                 return result is not null ? Ok(result) : throw new Exception();
             }

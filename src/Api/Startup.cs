@@ -1,3 +1,4 @@
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Model;
 using Repository;
 using System;
 
@@ -25,6 +27,7 @@ namespace Api
             services.AddDbContext<BlogContext>(x => x.UseInMemoryDatabase("InMemoryDb"));
             services.AddControllers();
 
+
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
@@ -32,7 +35,6 @@ namespace Api
             });
 
             services.AddDependencyInjectionConfiguration();
-            services.AddFluentValidationAutoValidation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
