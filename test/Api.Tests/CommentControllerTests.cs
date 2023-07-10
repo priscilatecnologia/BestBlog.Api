@@ -12,12 +12,14 @@ namespace Api.Tests
     public class CommentControllerTests
     {
         private readonly Mock<ICommentRepository> _commentRepository;
+        private readonly Mock<IPostRepository> _postRepository;
         private readonly CommentController _controllerUnitTesting;
 
         public CommentControllerTests()
         {
             _commentRepository = new Mock<ICommentRepository>();
-            _controllerUnitTesting = new CommentController(null, _commentRepository.Object);
+            _postRepository = new Mock<IPostRepository>();
+            _controllerUnitTesting = new CommentController(null, _commentRepository.Object, _postRepository.Object);
         }
 
         [Fact]
@@ -48,10 +50,8 @@ namespace Api.Tests
             // Act
             var actual = _controllerUnitTesting.Post(comment);
 
-            //// Assert
-            //var okObjectResult = Assert.IsType<BedRequestResult>(actual.Result);
-            //Assert.Equal(expected, okObjectResult.Value);
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(actual.Result);
         }
-
     }
 }
