@@ -16,10 +16,11 @@ namespace Api.Controllers
         private readonly IPostRepository _repository;
         private readonly ICommentRepository _commentRepository;
 
-        public PostController(ILogger<PostController> logger, IPostRepository repository)
+        public PostController(ILogger<PostController> logger, IPostRepository repository, ICommentRepository commentRepository)
         {
             _repository = repository;
             _logger = logger;
+            _commentRepository = commentRepository;
         }
 
         [HttpGet]

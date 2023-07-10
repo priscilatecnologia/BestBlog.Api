@@ -28,18 +28,23 @@ namespace Repository
 
         public TEntity Create(TEntity entity)
         {
-            return _context.Set<TEntity>().Add(entity).Entity;
+            var result = _context.Set<TEntity>().Add(entity).Entity;
+            _context.SaveChanges();
+            return result;
         }
 
         public TEntity Update(TEntity entity)
         {
-            return _context.Set<TEntity>().Update(entity).Entity;
+            var result = _context.Set<TEntity>().Update(entity).Entity;
+            _context.SaveChanges();
+            return result;
         }
 
         public bool Delete(Guid id)
         {
             var entity = _context.Find<TEntity>(id);
             var result = _context.Remove(entity);
+            _context.SaveChanges();
             return result.State == EntityState.Deleted;
         }
     }
