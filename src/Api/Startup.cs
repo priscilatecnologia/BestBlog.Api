@@ -39,6 +39,8 @@ namespace Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            DatabaseManagementService.MigrationInitialisation(app);
+
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseRouting();
@@ -59,11 +61,23 @@ namespace Api
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            NativeInjectorBootStrapper.RegisterServices(services);
+           NativeInjectorBootStrapper.RegisterServices(services);
 
             services.AddScoped<IValidator<Comment>, CommentValidation>();
         }
     }
 
+    public static class DatabaseManagementService
+    {
+        // Getting the scope of our database context
+        public static void MigrationInitialisation(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                // Takes all of our migrations files and apply them against the database in case they are not implemented
+                serviceScope.ServiceProvider.GetService<BlogContext>().Database.Migrate();
+            }
+        }
+    }
 
 }
