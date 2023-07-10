@@ -76,7 +76,8 @@ namespace Api.Controllers
             if (!validationResult.IsValid)
             {
                 var message = new StringBuilder();
-                validationResult.Errors.ForEach(delegate (ValidationFailure error) {
+                validationResult.Errors.ForEach(delegate (ValidationFailure error)
+                {
                     message.AppendLine(string.Format($"{error.PropertyName}: '{error.ErrorMessage}'"));
                 });
 
@@ -87,7 +88,11 @@ namespace Api.Controllers
             {
                 var post = _postRepository.Get(comment.PostId);
                 if (post is null)
-                    return BadRequest(new { Message = "The post reference notfound", Model = comment });
+                    // TODO: To ensure the optimal user experience,
+                    // it is essential to collaborate with the UX team
+                    // or any individual responsible for decision - making
+                    // to achieve alignment and deliver a more effective message.
+                    return NotFound(new { Message = "The post reference not found", Model = comment });
 
                 var result = _repository.Create(comment);
                 return result is not null ? Ok(result) : throw new Exception();
