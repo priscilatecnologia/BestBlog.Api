@@ -23,9 +23,10 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BlogContext>(options =>options.UseSqlServer(Configuration.GetConnectionString("WebApiDatabase")));
-            services.AddControllers();
+            var connectionString = Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            services.AddDbContext<BlogContext>(options => options.UseSqlServer(connectionString));
 
+            services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {

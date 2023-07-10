@@ -8,10 +8,8 @@ namespace Api
         public static void RegisterServices(IServiceCollection services)
         {
             // Infra - Data
-            services.AddScoped<BlogContext>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
-
         }
     }
 }
