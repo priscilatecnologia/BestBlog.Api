@@ -15,10 +15,10 @@ Also included:
 - I provided an example to **demonstrate the validation approach**, but further *"Post Class" need to be implemented*. Implemented the only following request validations
 
 ## Implemented Validations
-1.This version is missing Post Model Class validations
-2. `PostId` must be an existing post id -> CommentController class has **exemple** how to implement the *Application Services* with **roles behaviors**. It contains one more than one repository class to fit the riquiered roles
-3. `Content` should not have more than 120 characters -> An Example using FluentValidation
-4. `Author` should not have more than 30 characters -> An Example using FluentValidation
+- This version is missing Post Model Class validations
+- `PostId` must be an existing post id -> CommentController class has **exemple** how to implement the *Application Services* with **roles behaviors**. It contains one more than one repository class to fit the riquiered roles
+- `Content` should not have more than 120 characters -> An Example using FluentValidation
+- `Author` should not have more than 30 characters -> An Example using FluentValidation
 
 ## Persistence layer
 Implemented the empty methods to persist the data. To avoid code repetition, I introduced an abstraction class.
