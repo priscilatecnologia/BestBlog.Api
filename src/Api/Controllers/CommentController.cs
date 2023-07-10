@@ -77,7 +77,7 @@ namespace Api.Controllers
             {
                 var post = _postRepository.Get(comment.PostId);
                 if (post is null)
-                    return BadRequest(new { Message = "The post reference notfound", Model = comment});
+                    return BadRequest(new { Message = "The post reference notfound", Model = comment });
 
                 var result = _repository.Create(comment);
                 return result is not null ? Ok(result) : throw new Exception();
@@ -93,13 +93,47 @@ namespace Api.Controllers
         [HttpPut("{id:guid}")]
         public IActionResult Put([FromRoute] Guid id, [FromBody] Comment comment)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+            {
+                // O modelo é inválido, retorne uma resposta adequada
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var post = _postRepository.Get(comment.PostId);
+                if (post is null)
+                    return BadRequest(new { Message = "The post reference notfound", Model = comment });
+
+                var result = _repository.Update(comment);
+                return result is not null ? Ok(result) : throw new Exception();
+            }
+            catch (Exception e)
+            {
+                // TODO: Request for the best answare
+                _logger.LogError(e, e.Message);
+                return ValidationProblem();
+            }
         }
 
         [HttpDelete("{id:guid}")]
         public IActionResult Delete([FromRoute] Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var comment = _repository.Get(id);
+                if (comment is null)
+                    return NotFound();
+
+                var result = _repository.Delete(id);
+                return result ? Ok(result) : UnprocessableEntity(id);
+            }
+            catch (Exception e)
+            {
+                // TODO: Request for the best answare
+                _logger.LogError(e, e.Message);
+                return ValidationProblem();
+            }
         }
     }
 }
