@@ -1,39 +1,29 @@
+using Model;
 using System;
 using System.Collections.Generic;
-using Model;
+using System.Linq;
 
 namespace Repository
 {
-    public class CommentRepository
+    public class CommentRepository : BaseRepository<Comment>, ICommentRepository
     {
-        public IEnumerable<Comment> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Comment Get(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Comment Create(Comment comment)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Comment Update(Comment comment)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Delete(Guid id)
-        {
-            throw new NotImplementedException();
-        }
+        public CommentRepository(BlogContext context) : base(context) {}
 
         public IEnumerable<Comment> GetByPostId(Guid postId)
         {
-            throw new NotImplementedException();
+            return Context.Comments.Where(x => x.PostId == postId);
+        }
+
+        public Comment UpdateByPostId(Guid postId, Comment comment)
+        {
+            var entity = Context. Comments.Where(x => x.PostId == postId && x.Id == comment.Id).FirstOrDefault();
+            return Context.Comments.Update(entity).Entity;
+        }
+
+        public Comment DeleteByPostId(Guid postId, Comment comment)
+        {
+            var entity = Context.Comments.Where(x => x.PostId == postId && x.Id == comment.Id).FirstOrDefault();
+            return Context.Comments.Remove(entity).Entity;
         }
     }
 }
