@@ -2,10 +2,10 @@ version: '3'
 
 services:
 
-  Api:
+  api-server:
     build:
       context: .
-      dockerfile: Api/Dockerfile
+      dockerfile: ./src/Api/Dockerfile
     ports:
       - '7004:80'
     environment:
@@ -21,8 +21,6 @@ services:
       MSSQL_PID: Express
     ports:
       - "1433:1433"
-    volumes:
-      - C:\dados\volumes\sqlserver:/var/opt/mssql/data
 
 networks:
   app-network:
