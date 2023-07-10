@@ -64,6 +64,7 @@ namespace Api
            NativeInjectorBootStrapper.RegisterServices(services);
 
             services.AddScoped<IValidator<Comment>, CommentValidation>();
+            services.AddScoped<IValidator<Post>, PostValidation>();
         }
     }
 
