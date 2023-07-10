@@ -1,8 +1,6 @@
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,9 +23,8 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BlogContext>(x => x.UseInMemoryDatabase("InMemoryDb"));
+            services.AddDbContext<BlogContext>(options =>options.UseSqlServer(Configuration.GetConnectionString("WebApiDatabase")));
             services.AddControllers();
-
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
