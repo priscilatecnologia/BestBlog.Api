@@ -1,6 +1,5 @@
 using FluentValidation;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Model
 {
@@ -22,5 +21,4 @@ namespace Model
             RuleFor(x => x.PostId).NotNull().NotEmpty();
         }
     }
-
 }

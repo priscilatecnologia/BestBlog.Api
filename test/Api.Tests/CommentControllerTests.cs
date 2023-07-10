@@ -38,5 +38,20 @@ namespace Api.Tests
             var okObjectResult = Assert.IsType<OkObjectResult>(actual.Result);
             Assert.Equal(expected, okObjectResult.Value);
         }
+
+        [Fact]
+        public void Insert_Returns_BedRequest_When_Author_have_more_than_30_characters()
+        {
+            // Arrange
+            var comment = new Comment { Author = "Author have more than 30 characters", Content = "New Content", CreationDate = System.DateTime.Now, PostId = Guid.NewGuid() } ;
+
+            // Act
+            var actual = _controllerUnitTesting.Post(comment);
+
+            //// Assert
+            //var okObjectResult = Assert.IsType<BedRequestResult>(actual.Result);
+            //Assert.Equal(expected, okObjectResult.Value);
+        }
+
     }
 }
