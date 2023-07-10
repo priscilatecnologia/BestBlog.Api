@@ -17,7 +17,7 @@ namespace Model
         public CommentValidation()
         {
             RuleFor(x => x.Content).Must(x => !string.IsNullOrEmpty(x) && x.Length <= 120);
-            RuleFor(x => x.Author).Must(x => !string.IsNullOrEmpty(x) && x.Length <= 30);
+            RuleFor(x => x.Author).Must(x => !string.IsNullOrEmpty(x) && x.Length <= 30).WithMessage("Should not have more than 30 characters");
             RuleFor(x => x.PostId).NotNull().NotEmpty();
         }
     }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Api.Controllers;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 using Moq;
@@ -13,13 +15,15 @@ namespace Api.Tests
     {
         private readonly Mock<ICommentRepository> _commentRepository;
         private readonly Mock<IPostRepository> _postRepository;
+        private readonly IValidator<Comment> _validator;
         private readonly CommentController _controllerUnitTesting;
 
         public CommentControllerTests()
         {
             _commentRepository = new Mock<ICommentRepository>();
             _postRepository = new Mock<IPostRepository>();
-            _controllerUnitTesting = new CommentController(null, _commentRepository.Object, _postRepository.Object);
+            _validator = new CommentValidation();
+            _controllerUnitTesting = new CommentController(null, _commentRepository.Object, _postRepository.Object, _validator);
         }
 
         [Fact]
