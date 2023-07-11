@@ -8,6 +8,9 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using System.Net.Mime;
 using System.ComponentModel.DataAnnotations;
+using FluentValidation;
+using FluentValidation.Results;
+using System.Text;
 
 namespace Api.Controllers
 {
@@ -18,12 +21,14 @@ namespace Api.Controllers
         private readonly ILogger<CommentController> _logger;
         private readonly ICommentRepository _repository;
         private readonly IPostRepository _postRepository;
+        private readonly IValidator<Comment> _validator;
 
-        public CommentController(ILogger<CommentController> logger, ICommentRepository repository, IPostRepository postRepository)
+        public CommentController(ILogger<CommentController> logger, ICommentRepository repository, IPostRepository postRepository, IValidator<Comment> validator)
         {
             _repository = repository;
             _logger = logger;
             _postRepository = postRepository;
+            _validator = validator;
         }
 
         [HttpGet]
@@ -65,19 +70,29 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Comment> Post([FromBody] Comment comment)
+        public ActionResult<Comment> Post([FromBody][Required] Comment comment)
         {
-            if (!ModelState.IsValid)
+            var validationResult = _validator.Validate(comment);
+            if (!validationResult.IsValid)
             {
-                // O modelo é inválido, retorne uma resposta adequada
-                return BadRequest(ModelState);
+                var message = new StringBuilder();
+                validationResult.Errors.ForEach(delegate (ValidationFailure error)
+                {
+                    message.AppendLine(string.Format($"{error.PropertyName}: '{error.ErrorMessage}'"));
+                });
+
+                return BadRequest(new { Message = message.ToString(), Model = comment });
             }
 
             try
             {
                 var post = _postRepository.Get(comment.PostId);
                 if (post is null)
-                    return BadRequest(new { Message = "The post reference notfound", Model = comment });
+                    // TODO: To ensure the optimal user experience,
+                    // it is essential to collaborate with the UX team
+                    // or any individual responsible for decision - making
+                    // to achieve alignment and deliver a more effective message.
+                    return NotFound(new { Message = "The post reference not found", Model = comment });
 
                 var result = _repository.Create(comment);
                 return result is not null ? Ok(result) : throw new Exception();
@@ -91,7 +106,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        public IActionResult Put([FromRoute] Guid id, [FromBody] Comment comment)
+        public IActionResult Put([FromRoute][Required] Guid id, [FromBody][Required] Comment comment)
         {
             if (!ModelState.IsValid)
             {
@@ -117,7 +132,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        public IActionResult Delete([FromRoute] Guid id)
+        public IActionResult Delete([FromRoute][Required] Guid id)
         {
             try
             {

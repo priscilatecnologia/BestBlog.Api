@@ -1,5 +1,4 @@
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +23,10 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BlogContext>(x => x.UseInMemoryDatabase("InMemoryDb"));
+            var connectionString = Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            services.AddDbContext<BlogContext>(options => options.UseSqlServer(connectionString));
+
             services.AddControllers();
-
-
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
@@ -40,6 +39,8 @@ namespace Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            DatabaseManagementService.MigrationInitialisation(app);
+
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseRouting();
@@ -60,9 +61,24 @@ namespace Api
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            NativeInjectorBootStrapper.RegisterServices(services);
+           NativeInjectorBootStrapper.RegisterServices(services);
+
+            services.AddScoped<IValidator<Comment>, CommentValidation>();
+            services.AddScoped<IValidator<Post>, PostValidation>();
         }
     }
 
+    public static class DatabaseManagementService
+    {
+        // Getting the scope of our database context
+        public static void MigrationInitialisation(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                // Takes all of our migrations files and apply them against the database in case they are not implemented
+                serviceScope.ServiceProvider.GetService<BlogContext>().Database.Migrate();
+            }
+        }
+    }
 
 }

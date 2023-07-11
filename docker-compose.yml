@@ -2,27 +2,32 @@ version: '3'
 
 services:
 
-  Api:
+  api-server:
     build:
       context: .
-      dockerfile: Api/Dockerfile
+      dockerfile: ./src/Api/Dockerfile
     ports:
       - '7004:80'
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Docker
     networks:
       - app-network
+    depends_on:
+      - mssql-server
+
 
   mssql-server:
     image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    hostname: 'sqlserver'
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: "s@user2023"
       MSSQL_PID: Express
     ports:
       - "1433:1433"
-    volumes:
-      - C:\dados\volumes\sqlserver:/var/opt/mssql/data
+    networks:
+      - app-network
+
 
 networks:
   app-network:
