@@ -11,14 +11,16 @@ Also included:
 - Provided examples of how to add validations and **handle HTTP status codes**  specifically in the **CommentController** class.
 - Added OpenAPI **Swagger** documentation.
 - Added **docker-compose.yml** to construct **containers** to attend the application, including a **SQL Server database** image. 
-- I did not configure the database connection for this particular case. This configuration still needs to be implemented.
-- I provided an example to **demonstrate the validation approach**, but further *"Post Class" need to be implemented*. Implemented the only following request validations
+- This last PR was possbile to configure the database connection. Key words: EF, Migrations, DbContext, SaveChanges, SQL Server 
+- I provided an example to **demonstrate the validation approach**. Implemented the only following request validations
 
 ## Implemented Validations
-- This version is missing Post Model Class validations
-- `PostId` must be an existing post id -> CommentController class has **exemple** how to implement the *Application Services* with **roles behaviors**. It contains one more than one repository class to fit the riquiered roles
-- `Content` should not have more than 120 characters -> An Example using FluentValidation
-- `Author` should not have more than 30 characters -> An Example using FluentValidation
+- This version includes Post Model Class validations. All changes validations:
+- Comment.`PostId` must be an existing post id -> CommentController class has **exemple** how to implement the *Application Services* with **roles behaviors**. It contains one more than one repository class to fit the riquiered roles
+- Comment.`Content` should not have more than 120 characters -> An Example using FluentValidation
+- Comment.`Author` should not have more than 30 characters
+- Post.`Content` should not have more than 120 characters
+- Post.`Title` should not have more than 30 characters
 
 ## Persistence layer
 Implemented the empty methods to persist the data. To avoid code repetition, I introduced an abstraction class.
